@@ -1,29 +1,36 @@
 package org.example.assetmanagementsystem.exception;
 
+import org.example.assetmanagementsystem.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFoundException(
-            ResourceNotFoundException ex) {
+    public ResponseEntity<ErrorResponse>
+        handleResourceNotFoundException(ResourceNotFoundException ex) {
+
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage() , LocalDateTime.now());
 
         return new ResponseEntity<>(
-                ex.getMessage(),
+                errorResponse,
                 HttpStatus.NOT_FOUND
         );
     }
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<String> handleBusinessException(
+    public ResponseEntity<ErrorResponse> handleBusinessException(
             BusinessException ex) {
 
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), LocalDateTime.now());
         return new ResponseEntity<>(
-                ex.getMessage(),
+                errorResponse,
                 HttpStatus.BAD_REQUEST
         );
     }

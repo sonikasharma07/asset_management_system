@@ -1,6 +1,5 @@
 package org.example.assetmanagementsystem.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
