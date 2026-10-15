@@ -1,6 +1,7 @@
 package org.example.assetmanagementsystem.controller;
 
 import jakarta.validation.Valid;
+import org.example.assetmanagementsystem.dto.AssetHistoryResponse;
 import org.example.assetmanagementsystem.dto.AssetRequest;
 import org.example.assetmanagementsystem.dto.AssetResponse;
 import org.example.assetmanagementsystem.service.AssetService;
@@ -104,6 +105,13 @@ public class AssetController {
         return new ResponseEntity<>(assetResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/{assetId}/history")
+    public ResponseEntity<List<AssetHistoryResponse>> getAssetHistory(@PathVariable Long assetId) {
+
+        List<AssetHistoryResponse> history = assetService.getAssetHistory(assetId);
+
+        return new ResponseEntity<>(history, HttpStatus.OK);
+    }
 
 
 

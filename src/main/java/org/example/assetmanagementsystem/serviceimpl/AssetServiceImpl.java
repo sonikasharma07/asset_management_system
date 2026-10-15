@@ -1,5 +1,6 @@
 package org.example.assetmanagementsystem.serviceimpl;
 
+import org.example.assetmanagementsystem.dto.AssetHistoryResponse;
 import org.example.assetmanagementsystem.dto.AssetRequest;
 import org.example.assetmanagementsystem.dto.AssetResponse;
 import org.example.assetmanagementsystem.entity.Asset;
@@ -280,11 +281,42 @@ public class AssetServiceImpl implements AssetService {
         asset.setUpdatedDate(LocalDateTime.now());
 
         Asset retiredAsset = assetRepository.save(asset);
-
         createAssetHistory(retiredAsset, employee, oldStatus, AssetStatus.RETIRED, "Asset retired");
 
         return convertToResponse(retiredAsset);
     }
 
+    @Override
+    public List<AssetHistoryResponse> getAssetHistory(Long assetId) {
+
+        assetRepository.findById(assetId).orElseThrow(() ->
+                        new ResourceNotFoundException("Asset not found with id: " + assetId));
+        List<AssetHistory> assetHistories = assetHistoryRepository.findByAssetIdOrderByChangedDateDesc(assetId);
+        List<AssetHistoryResponse> responses = new ArrayList<>();
+
+        for (AssetHistory history : assetHistories) {
+            responses.add(convertToHistoryResponse(history));
+        }
+        return responses;
+    }
+
+
+    private AssetHistoryResponse convertToHistoryResponse(AssetHistory assetHistory) {
+
+        AssetHistoryResponse response = new AssetHistoryResponse();
+        response.setId(assetHistory.getId());
+        response.setAssetId(assetHistory.getAsset().getId());
+
+        if (assetHistory.getEmployee() != null) {
+            response.setEmployeeId(assetHistory.getEmployee().getId());
+        }
+
+        response.setOldStatus(assetHistory.getOldStatus());
+        response.setNewStatus(assetHistory.getNewStatus());
+        response.setRemarks(assetHistory.getRemarks());
+        response.setChangedDate(assetHistory.getChangedDate());
+
+        return response;
+    }
 
 }

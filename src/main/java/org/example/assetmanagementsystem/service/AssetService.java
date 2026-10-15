@@ -1,5 +1,6 @@
 package org.example.assetmanagementsystem.service;
 
+import org.example.assetmanagementsystem.dto.AssetHistoryResponse;
 import org.example.assetmanagementsystem.dto.AssetRequest;
 import org.example.assetmanagementsystem.dto.AssetResponse;
 
@@ -17,6 +18,6 @@ public interface AssetService {
     AssetResponse damageAsset(Long assetId);
     AssetResponse repairAsset(Long assetId);
     AssetResponse retireAsset(Long assetId);
-
+    List<AssetHistoryResponse> getAssetHistory(Long assetId);
 
 }
